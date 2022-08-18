@@ -4,12 +4,15 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.grandcircus.trackerapi.CountPairsRepository;
 import co.grandcircus.trackerapi.model.CountPair;
 import co.grandcircus.trackerapi.service.TrackerService;
 
@@ -21,8 +24,12 @@ public class TrackerApiController {
 	@Qualifier("trackerServiceA")
 	@Autowired
 	TrackerService service;
+	
+	@Autowired
+	CountPairsRepository repo;
 
 	@PostMapping("/track/{token}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void track(@PathVariable String token) {
 		service.add(token);
 	}

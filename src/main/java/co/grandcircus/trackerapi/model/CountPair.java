@@ -1,10 +1,13 @@
 package co.grandcircus.trackerapi.model;
 
-/**
- * A structure representing a token and an associated count.
- */
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document("countpairs")
 public class CountPair {
 
+	@Id
+	private String id;
 	private String token;
 	private int count;
 
@@ -16,6 +19,14 @@ public class CountPair {
 		super();
 		this.token = token;
 		this.count = count;
+	}
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getToken() {
