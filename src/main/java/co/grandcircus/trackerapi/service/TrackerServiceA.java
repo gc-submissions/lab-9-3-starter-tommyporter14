@@ -17,11 +17,11 @@ public class TrackerServiceA implements TrackerService{
 	
 	@Override
 	public void add(String token) {
-		Optional<CountPair> optCountPair = repo.findByToken(token);
-		if(optCountPair.get() != null) {
-			repo.findAndIncrementCountByToken(token);
-		}else {
+		CountPair countPair = repo.findByToken(token);
+		if(countPair == null) {
 			repo.save(new CountPair(token, 1));
+		}else {
+			repo.findAndIncrementCountByToken(token);
 		}
 	}
 

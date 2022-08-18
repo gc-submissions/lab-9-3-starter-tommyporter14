@@ -11,12 +11,9 @@ public class CountPair {
 	private String token;
 	private int count;
 
-	public CountPair() {
-		super();
-	}
+	public CountPair() {}
 
 	public CountPair(String token, int count) {
-		super();
 		this.token = token;
 		this.count = count;
 	}

@@ -27,16 +27,20 @@ public class TrackerApiController {
 	
 	@Autowired
 	CountPairsRepository repo;
+	
+	private String recent;
 
 	@PostMapping("/track/{token}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void track(@PathVariable String token) {
 		service.add(token);
+		recent = token;
 	}
 	
 	@DeleteMapping("/track")
 	public void reset() {
 		service.reset();
+		recent = "";
 	}
 	
 	@GetMapping("/count")
