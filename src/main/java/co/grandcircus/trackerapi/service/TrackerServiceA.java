@@ -5,19 +5,25 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import co.grandcircus.trackerapi.CountPairsRepository;
 import co.grandcircus.trackerapi.model.CountPair;
 
 @Service
 public class TrackerServiceA implements TrackerService{
-
-	@Autowired
-	CountPairsRepository repo;
 	
+	@Autowired
+	private CountPairsRepository repo;
+	@ExceptionHandler(CountPairNotFoundException.class)
+	String CountPairNotFoundHandler(CountPairNotFoundException ex) {
+		return ex.getMessage();
+	}
+	private String recent;
 	@Override
 	public void add(String token) {
 		CountPair countPair = repo.findByToken(token);
+
 		if(countPair == null) {
 			repo.save(new CountPair(token, 1));
 		}else {
@@ -27,38 +33,57 @@ public class TrackerServiceA implements TrackerService{
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
 		
+		repo.deleteAll();
 	}
 
 	@Override
 	public int getTotalCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		List<CountPair> allCountPairs = repo.findAll();
+		int totalCount = 0;
+		for (CountPair countPair : allCountPairs) {
+			totalCount += countPair.getCount();
+		}
+		return totalCount;
 	}
 
 	@Override
 	public boolean getTokenExists(String token) {
-		// TODO Auto-generated method stub
-		return false;
+		CountPair countPair = repo.findByToken(token);
+		if (countPair == null) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public int getTokenCount(String token) {
-		// TODO Auto-generated method stub
-		return 0;
+		CountPair countPair = repo.findByToken(token);
+		if (countPair == null) {
+			return 0;
+		}
+		return countPair.getCount();
 	}
-
+	public void sendRecent(String recent) {
+		this.recent = recent;
+	}
 	@Override
 	public String getLatest() {
-		// TODO Auto-generated method stub
-		return null;
+		return recent;
 	}
 
 	@Override
 	public CountPair getTop() {
-		// TODO Auto-generated method stub
-		return null;
+		List<CountPair> allCountPairs = repo.findAll();
+		int maxCount = 0;
+		String token = "";
+		for (CountPair countPair : allCountPairs) {
+			if (countPair.getCount() > maxCount) {
+				maxCount = countPair.getCount();
+				token = countPair.getToken();
+			}
+		}
+		return repo.findByToken(token);
 	}
 
 	@Override

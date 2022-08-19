@@ -1,3 +1,4 @@
+//9.3 Tommy Porter & Clara Balmer
 package co.grandcircus.trackerapi.controller;
 
 import java.util.List;
@@ -15,19 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 import co.grandcircus.trackerapi.CountPairsRepository;
 import co.grandcircus.trackerapi.model.CountPair;
 import co.grandcircus.trackerapi.service.TrackerService;
+import co.grandcircus.trackerapi.service.TrackerServiceA;
 
 @RestController
 public class TrackerApiController {
 	
 	// When you have multiple services that implement TrackerService,
 	// the @Qualifier annotation picks which to inject here.
-	@Qualifier("trackerServiceA")
+//	@Qualifier("trackerServiceA")
 	@Autowired
-	TrackerService service;
+	private TrackerServiceA service;
 	
 	@Autowired
-	CountPairsRepository repo;
-	
+	private CountPairsRepository repo;
 	private String recent;
 
 	@PostMapping("/track/{token}")
@@ -60,6 +61,7 @@ public class TrackerApiController {
 	
 	@GetMapping("/latest")
 	public String latest() {
+		service.sendRecent(recent);
 		return service.getLatest();
 	}
 	
